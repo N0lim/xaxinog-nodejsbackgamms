@@ -1,3 +1,12 @@
+// for jsDoc
+class TCRColour {
+    /** @type {int} */
+    id
+    /** @type {string} */
+    name
+    /** @type {string} */
+    over
+}
 export const BoardConstants = {
     WHITE: {
         id: 1,
@@ -107,40 +116,41 @@ export class Slot {
     /**
      * 
      * @param {int} point 
+     * @param {TCRColour} [PermTeam=undefined] 
      * @returns {Slot}
      */
-    next(point=1) {
+    next(point=1, PermTeam=undefined) {
         const blackEndShift = 12
         const blackStartShift = -12
         // 24 -> MaxSlotIndex
         // +12 -> blackStartShiftReturning
         const {User} = this.Sloter
         function up(from, point) {
-            const isBlack = User.team.id === BoardConstants.BLACK.id;
+            const isBlack = PermTeam?PermTeam:User.team.id === BoardConstants.BLACK.id;
             const pos = +from + +(isBlack&&((from<BoardConstants.MAP.blackend)?blackEndShift:blackStartShift)) + point;
             
             //validating
             const isover = pos > BoardConstants.MAP.lastPostionNumber;
 
-            const index = isover?User.team.over:isBlack?(pos+12)%24:pos;
+            const index = isover?(PermTeam?PermTeam.over:User.team.over):isBlack?(pos+12)%24:pos;
             
             return {pos, isover, index};
         }
         const {pos, isover, index} = up(this.index, point);
         return this.Sloter[index];
     }
-    down() {
+    down(PermTeam=undefined) {
         const blackEndShift = 12
         const blackStartShift = -12
         const {User} = this.Sloter;
         function down(from, point=-1) {
-            const isBlack = User.team.id === BoardConstants.BLACK.id;
+            const isBlack = PermTeam?PermTeam:User.team.id === BoardConstants.BLACK.id;
             const pos = +from + +(isBlack&&((from<BoardConstants.MAP.blackend)?blackEndShift:blackStartShift)) + +point;
             
             //validating
             const isover = pos < 0;
 
-            const index = isover?User.team.over:isBlack?(pos+12)%24:pos;
+            const index = isover?(PermTeam?PermTeam.over:User.team.over):isBlack?(pos+12)%24:pos;
             
             return {pos, isover, index};
         }

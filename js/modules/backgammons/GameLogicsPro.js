@@ -176,17 +176,21 @@ class Board {
         function sixchecker(toSlot, fromSlot) {//проверять передние клетки
             //TODO: upd algol with excluding of slot if u stepFrom
             // const sum = (acc, bool)=>acc+(+bool);
+            /** @type {int} */
+            const CurrentPlayerTeam = ActivePlayer.team.id;
+            /** @type {int} */
+            const OpponentPlayerTeam = CurrentPlayerTeam===WHITE?BLACK:WHITE;
             let counter = 1;
             let curSlot = toSlot;
             for(const _ of Array(5).keys()) {
-                curSlot = curSlot.down();
+                curSlot = curSlot.down(OpponentPlayerTeam);
                 if(curSlot.index == fromSlot.index && !(curSlot.refToArr.Count-1)) break;
                 if(curSlot.ismy()) counter++
                 else break;
             }
             curSlot = toSlot;
             for(const _ of Array(5).keys()) {
-                curSlot = curSlot.next();
+                curSlot = curSlot.next(+1, OpponentPlayerTeam);
                 if(curSlot.index == fromSlot.index && !(curSlot.refToArr.Count-1)) break;
                 if(curSlot.ismy()) counter++
                 else break;
